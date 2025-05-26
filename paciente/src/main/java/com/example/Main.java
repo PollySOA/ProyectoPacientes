@@ -39,6 +39,7 @@ public class Main {
             marta.agregarMedicamento(vitaminas);
             marta.agregarMedicamento(insulina);
             juan.agregarMedicamento(hierro);
+            juan.agregarMedicamento(vitaminas);
 
             // Insertamos los pacientes en la base de datos (los medicamentos se insertan en
             // cascada)
@@ -46,35 +47,45 @@ public class Main {
             pDAO.insertPaciente(session, marta);
             pDAO.insertPaciente(session, pedro);
 
-            // Quitamos un medicamento a Marta y actualizamos en la base de datos
-            marta.quitarMedicamento(vitaminas);
-            pDAO.updatePaciente(session, marta);
-
             // Agregamos un medicamento extra a Juan y actualizamos en la base de datos
             juan.agregarMedicamento(insulina);
+            pDAO.updatePaciente(session, juan);
+
+            pedro.agregarMedicamento(vitaminas);
+            pDAO.updatePaciente(session, pedro);
+
+            // se quita todas las vitaminas de los demas pacientes menos de marta
+            marta.agregarMedicamento(vitaminas);
+            pDAO.updatePaciente(session, marta);
+
+            pedro.quitarMedicamento(vitaminas);
+            pDAO.updatePaciente(session, pedro);
+
+            juan.quitarMedicamento(vitaminas);
+            pDAO.updatePaciente(session, juan);
+
+            juan.quitarMedicamento(insulina);
             pDAO.updatePaciente(session, juan);
 
             // Eliminamos a Pedro de la base de datos
             // pDAO.deletePaciente(session, pedro.getId());
 
-            /*
-             * List<Medicamento> medicamentos = mDAO.selectAllMedicamentos(session);
-             * for (Medicamento m : medicamentos) {
-             * System.out.println("Medicamento: " + m.getNombre());
-             * // Si el medicamento es "Vitaminas", lo eliminamos de los pacientes que tenga
-             * // vitaminas
-             * if (m.getNombre().equals("Vitaminas")) {
-             * // Obtenemos todos los pacientes que tienen este medicamento
-             * Set<Paciente> pacientesConVitaminas = m.getPacientes();// Recordar que
-             * utilizamos Set, me devuelve el conjunto de pacientes
-             * for (Paciente p : pacientesConVitaminas) {
-             * m.quitarPaciente(p);
-             * }
-             * 
-             * }
-             * mDAO.updateMedicamento(session, m);
-             * }
-             */
+            List<Medicamento> medicamentos = mDAO.selectAllMedicamentos(session);
+            for (Medicamento m : medicamentos) {
+                System.out.println("Medicamento: " + m.getNombre());
+                // Si el medicamento es "Vitaminas", lo eliminamos de los pacientes que tenga
+                // vitaminas
+                if (m.getNombre().equals("Vitaminas")) {
+                    // Obtenemos todos los pacientes que tienen este medicamento
+                    Set<Paciente> pacientesConVitaminas = m.getPacientes();// Recordar que utilizamos Set, me devuelve
+                                                                           // el conjunto de pacientes
+                    for (Paciente p : pacientesConVitaminas) {
+                        m.quitarPaciente(p);
+                    }
+
+                }
+                mDAO.updateMedicamento(session, m);
+            }
             // Confirmamos los cambios realizados en la base de datos
             tx.commit();
             session.clear();
