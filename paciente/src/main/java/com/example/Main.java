@@ -1,5 +1,6 @@
 package com.example;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -61,35 +62,34 @@ public class Main {
             pedro.quitarMedicamento(vitaminas);
             pDAO.updatePaciente(session, pedro);
 
-            juan.quitarMedicamento(vitaminas);
-            pDAO.updatePaciente(session, juan);
+            marta.quitarMedicamento(vitaminas);
+            pDAO.updatePaciente(session, marta);
 
             juan.quitarMedicamento(insulina);
             pDAO.updatePaciente(session, juan);
 
             // Eliminamos a Pedro de la base de datos
             // pDAO.deletePaciente(session, pedro.getId());
-
+// 7. Commit de la transacción
+           
             List<Medicamento> medicamentos = mDAO.selectAllMedicamentos(session);
             for (Medicamento m : medicamentos) {
                 System.out.println("Medicamento: " + m.getNombre());
                 // Si el medicamento es "Vitaminas", lo eliminamos de los pacientes que tenga
                 // vitaminas
-                if (m.getNombre().equals("Vitaminas")) {
-                    // Obtenemos todos los pacientes que tienen este medicamento
+                if (m.getNombre().equals("Vitaminas")) {// si el medicamento es vitaminas
+                  
                     Set<Paciente> pacientesConVitaminas = m.getPacientes();// Recordar que utilizamos Set, me devuelve
                                                                            // el conjunto de pacientes
-                    for (Paciente p : pacientesConVitaminas) {
+                  
+                     for (Paciente p : pacientesConVitaminas) {
                         m.quitarPaciente(p);
                     }
 
                 }
                 mDAO.updateMedicamento(session, m);
             }
-            // Confirmamos los cambios realizados en la base de datos
-            tx.commit();
-            session.clear();
-
+           
             // Obtenemos todos los pacientes y mostramos sus medicamentos
             List<Paciente> pacientes = pDAO.selectAllPacientes(session);
 
@@ -100,7 +100,8 @@ public class Main {
                 }
                 System.out.println();
             }
-
+ tx.commit();
+    session.clear(); // Esto no es suficiente
         } catch (Exception e) {
             // Si ocurre un error, revertimos la transacción y mostramos el error
             if (tx != null) {
