@@ -24,7 +24,7 @@ public class Main {
         System.out.println("2. Insertar Pacientes");
         System.out.println("3. Actualizar Pacientes");
         System.out.println("4. Eliminar Pacientes");
-
+//
         System.out.println("--------------------------------------------------------\n");
         System.out.println("5. Mostrar Medicamentos");
         System.out.println("6. Insertar Medicamentos");
