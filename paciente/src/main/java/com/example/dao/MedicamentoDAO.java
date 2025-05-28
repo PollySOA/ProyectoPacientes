@@ -28,7 +28,13 @@ public class MedicamentoDAO {
             System.out.println("Medicamento borrado");
         }
     }
-    
+    public Medicamento selectMedicamentoById(Session session, int id) {
+        
+        return session.get(Medicamento.class, id); // Busca y devuelve el medicamento por su id.
+       
+    }
+
+
     // devuelve una lista con todos los medicamentos que hay en la base de datos.
     public List<Medicamento> selectAllMedicamentos(Session session) {
         return session.createQuery("FROM Medicamento", Medicamento.class).list(); // Ejecuta una consulta para obtener todos los medicamentos.

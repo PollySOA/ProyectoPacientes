@@ -25,7 +25,10 @@ public class PacienteDAO {
             System.out.println("Paciente borrado");
         }
     }
-
+public Paciente selectPacienteById(Session session, int id) {
+        return session.get(Paciente.class, id);
+    }
+    
     public List<Paciente> selectAllPacientes(Session session) {
         return session.createQuery("FROM Paciente", Paciente.class).list();
 
