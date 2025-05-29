@@ -1,4 +1,4 @@
-package helper_classes;
+package com.example.Gui.helper_classes;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
