@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class GestionPacientesGUI extends JFrame {
@@ -124,11 +126,11 @@ public class GestionPacientesGUI extends JFrame {
         panelControlesPacientes.add(txtGlucosa);
 
         JLabel lblHierro = new JLabel("Hierro:");
-        lblHierro.setBounds(270, 110, 80, 25); // Ajustado para alinear correctamente
+        lblHierro.setBounds(270, 110, 80, 25);
         panelControlesPacientes.add(lblHierro);
 
         txtHierro = new JTextField();
-        txtHierro.setBounds(320, 110, 150, 25); // Ajustado para alinear correctamente
+        txtHierro.setBounds(320, 110, 150, 25);
         panelControlesPacientes.add(txtHierro);
 
         // Botones para pacientes
@@ -224,7 +226,7 @@ public class GestionPacientesGUI extends JFrame {
                                     JOptionPane.ERROR_MESSAGE);
                         } else {
                             // Eliminar referencias primero
-                            for (Medicamento m : new java.util.ArrayList<>(paciente.getMedicamentos())) {
+                            for (Medicamento m : new ArrayList<>(paciente.getMedicamentos())) {
                                 paciente.quitarMedicamento(m);
                             }
 
@@ -385,7 +387,7 @@ public class GestionPacientesGUI extends JFrame {
                                     JOptionPane.ERROR_MESSAGE);
                         } else {
                             // Eliminar referencias primero (para evitar constraint violation)
-                            for (Paciente p : new java.util.ArrayList<>(medicamento.getPacientes())) {
+                            for (Paciente p : new ArrayList<>(medicamento.getPacientes())) {
                                 medicamento.quitarPaciente(p);
                             }
 
@@ -589,21 +591,23 @@ public class GestionPacientesGUI extends JFrame {
         }
     }
 
+    // quitar string builder y imprimir Pacientes+Medicamientos */
     private void cargarDatosPacientesMedicamentos() {
         modelPacientesMedicamentos.setRowCount(0);
+
         List<Paciente> pacientes = pDAO.selectAllPacientes(session);
-        for (Paciente p : pacientes) {
-            StringBuilder medicamentos = new StringBuilder();
+        for (Paciente p : pacientesConMedicamientos) {
+            // Imprimimos
+
             for (Medicamento m : p.getMedicamentos()) {
-                medicamentos.append(m.getNombre()).append(" (ID:").append(m.getId()).append("), ");
+                (m.getNombre()).append(" (ID:").append(m.getId()).append("), ");
+
             }
-            String medicamentosStr = medicamentos.length() > 0 ? medicamentos.substring(0, medicamentos.length() - 2)
-                    : "Sin medicamentos";
 
             modelPacientesMedicamentos.addRow(new Object[] {
                     p.getId(),
                     p.getNombre(),
-                    medicamentosStr
+
             });
         }
     }

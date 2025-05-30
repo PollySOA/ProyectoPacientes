@@ -211,117 +211,117 @@ public class Main {
                         }
                         break;
 
-                   case 9:
-    // Mostrar lista de pacientes disponibles
-    System.out.println("\n--- PACIENTES DISPONIBLES ---");
-    List<Paciente> pacientesLista = pDAO.selectAllPacientes(session);
-    for (Paciente p : pacientesLista) {
-        System.out.println("ID: " + p.getId() + " - " + p.getNombre());
-    }
+                    case 9:
+                        // Mostrar lista de pacientes disponibles
+                        System.out.println("\n--- PACIENTES DISPONIBLES ---");
+                        List<Paciente> pacientesLista = pDAO.selectAllPacientes(session);
+                        for (Paciente p : pacientesLista) {
+                            System.out.println("ID: " + p.getId() + " - " + p.getNombre());
+                        }
 
-    // Mostrar lista de medicamentos disponibles
-    System.out.println("\n--- MEDICAMENTOS DISPONIBLES ---");
-    List<Medicamento> medicamentosLista = mDAO.selectAllMedicamentos(session);
-    for (Medicamento m : medicamentosLista) {
-        System.out.println("ID: " + m.getId() + " - " + m.getNombre());
-    }
+                        // Mostrar lista de medicamentos disponibles
+                        System.out.println("\n--- MEDICAMENTOS DISPONIBLES ---");
+                        List<Medicamento> medicamentosLista = mDAO.selectAllMedicamentos(session);
+                        for (Medicamento m : medicamentosLista) {
+                            System.out.println("ID: " + m.getId() + " - " + m.getNombre());
+                        }
 
-    // Pedir IDs para asociar
-    System.out.println("\nIngrese el ID del paciente a asociar:");
-    int idPac = s.nextInt();
-    s.nextLine();
-    
-    System.out.println("Ingrese el ID del medicamento:");
-    int idMed = s.nextInt();
-    s.nextLine();
+                        // Pedir IDs para asociar
+                        System.out.println("\nIngrese el ID del paciente a asociar:");
+                        int idPac = s.nextInt();
+                        s.nextLine();
 
-    // Operación de asociación
-    Transaction txAsociar = session.beginTransaction();
-    try {
-        Paciente pac = pDAO.selectPacienteById(session, idPac);
-        Medicamento med = mDAO.selectMedicamentoById(session, idMed);
-        
-        med.agregarPaciente(pac);
-        mDAO.updateMedicamento(session, med);
-        
-        txAsociar.commit();
-        System.out.println("\n Asociación exitosa:");
-        System.out.println("   Paciente: " + pac.getNombre());
-        System.out.println("   Medicamento: " + med.getNombre());
-    } catch (Exception e) {
-        txAsociar.rollback();
-        System.out.println(" Error: " + e.getMessage());
-    }
-    break;
+                        System.out.println("Ingrese el ID del medicamento:");
+                        int idMed = s.nextInt();
+                        s.nextLine();
 
-case 10:
-    // Mostrar pacientes con sus medicamentos
-    System.out.println("\n--- PACIENTES Y SUS MEDICAMENTOS ---");
-    List<Paciente> pacientesConMed = pDAO.selectAllPacientes(session);
-    for (Paciente p : pacientesConMed) {
-        System.out.println("\nPaciente ID: " + p.getId() + " - " + p.getNombre());
-        System.out.println("Medicamentos asignados:");
-        for (Medicamento m : p.getMedicamentos()) {
-            System.out.println("   ID: " + m.getId() + " - " + m.getNombre());
-        }
-    }
+                        // Operación de asociación
+                        Transaction txAsociar = session.beginTransaction();
+                        try {
+                            Paciente pac = pDAO.selectPacienteById(session, idPac);
+                            Medicamento med = mDAO.selectMedicamentoById(session, idMed);
 
-    // Pedir IDs para desasociar
-    System.out.println("\nIngrese el ID del paciente a desasociar:");
-    int idPacQuitar = s.nextInt();
-    s.nextLine();
-    
-    System.out.println("Ingrese el ID del medicamento a quitar:");
-    int idMedQuitar = s.nextInt();
-    s.nextLine();
+                            med.agregarPaciente(pac);
+                            mDAO.updateMedicamento(session, med);
 
-    // Operación de desasociación
-    Transaction txQuitar = session.beginTransaction();
-    try {
-        Paciente pacQuitar = pDAO.selectPacienteById(session, idPacQuitar);
-        Medicamento medQuitar = mDAO.selectMedicamentoById(session, idMedQuitar);
-        
-        medQuitar.quitarPaciente(pacQuitar);
-        mDAO.updateMedicamento(session, medQuitar);
-        
-        txQuitar.commit();
-        System.out.println("\n Desasociación exitosa:");
-        System.out.println("   Paciente: " + pacQuitar.getNombre());
-        System.out.println("   Medicamento: " + medQuitar.getNombre());
-    } catch (Exception e) {
-        txQuitar.rollback();
-        System.out.println("Error: " + e.getMessage());
-    }
-    break;
-                   case 11:
-    // Mostrar pacientes con sus medicamentos (versión mejorada)
-    System.out.println("\n══════════════════════════════════════");
-    System.out.println("    LISTADO DE PACIENTES CON MEDICAMENTOS");
-    System.out.println("══════════════════════════════════════\n");
-    
-    List<Paciente> pacientesConMedicamentos = pDAO.selectAllPacientes(session);
-    
-    if (pacientesConMedicamentos.isEmpty()) {
-        System.out.println("No hay pacientes registrados.");
-    } else {
-        for (Paciente p : pacientesConMedicamentos) {
-            System.out.println("PACIENTE: " + p.getNombre().toUpperCase() + " (ID: " + p.getId() + ")");
-            System.out.println("Nivel glucosa: " + p.getNivelGlucosa());
-            System.out.println("Nivel hierro: " + p.getNivelHierroSangre());
-            
-            if (p.getMedicamentos().isEmpty()) {
-                System.out.println(" No tiene medicamentos asignados");
-            } else {
-                System.out.println("MEDICAMENTOS ASIGNADOS:");
-                for (Medicamento m : p.getMedicamentos()) {
-                    System.out.println("- " + m.getNombre() + " (ID: " + m.getId() + ")");
-                }
-            }
-            System.out.println("----------------------------------------");
-        }
-    }
-    System.out.println("\nTotal pacientes: " + pacientesConMedicamentos.size());
-    break;
+                            txAsociar.commit();
+                            System.out.println("\n Asociación exitosa:");
+                            System.out.println("   Paciente: " + pac.getNombre());
+                            System.out.println("   Medicamento: " + med.getNombre());
+                        } catch (Exception e) {
+                            txAsociar.rollback();
+                            System.out.println(" Error: " + e.getMessage());
+                        }
+                        break;
+
+                    case 10:
+                        // Mostrar pacientes con sus medicamentos
+                        System.out.println("\n--- PACIENTES Y SUS MEDICAMENTOS ---");
+                        List<Paciente> pacientesConMed = pDAO.selectAllPacientes(session);
+                        for (Paciente p : pacientesConMed) {
+                            System.out.println("\nPaciente ID: " + p.getId() + " - " + p.getNombre());
+                            System.out.println("Medicamentos asignados:");
+                            for (Medicamento m : p.getMedicamentos()) {
+                                System.out.println("   ID: " + m.getId() + " - " + m.getNombre());
+                            }
+                        }
+
+                        // Pedir IDs para desasociar
+                        System.out.println("\nIngrese el ID del paciente a desasociar:");
+                        int idPacQuitar = s.nextInt();
+                        s.nextLine();
+
+                        System.out.println("Ingrese el ID del medicamento a quitar:");
+                        int idMedQuitar = s.nextInt();
+                        s.nextLine();
+
+                        // Operación de desasociación
+                        Transaction txQuitar = session.beginTransaction();
+                        try {
+                            Paciente pacQuitar = pDAO.selectPacienteById(session, idPacQuitar);
+                            Medicamento medQuitar = mDAO.selectMedicamentoById(session, idMedQuitar);
+
+                            medQuitar.quitarPaciente(pacQuitar);
+                            mDAO.updateMedicamento(session, medQuitar);
+
+                            txQuitar.commit();
+                            System.out.println("\n Desasociación exitosa:");
+                            System.out.println("   Paciente: " + pacQuitar.getNombre());
+                            System.out.println("   Medicamento: " + medQuitar.getNombre());
+                        } catch (Exception e) {
+                            txQuitar.rollback();
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                        break;
+                    case 11:
+                        // Mostrar pacientes con sus medicamentos (versión mejorada)
+                        System.out.println("\n══════════════════════════════════════");
+                        System.out.println("    LISTADO DE PACIENTES CON MEDICAMENTOS");
+                        System.out.println("══════════════════════════════════════\n");
+
+                        List<Paciente> pacientesConMedicamentos = pDAO.selectAllPacientes(session);
+
+                        if (pacientesConMedicamentos.isEmpty()) {
+                            System.out.println("No hay pacientes registrados.");
+                        } else {
+                            for (Paciente p : pacientesConMedicamentos) {
+                                System.out.println("PACIENTE: " + p.getNombre() + " (ID: " + p.getId() + ")");
+                                System.out.println("Nivel glucosa: " + p.getNivelGlucosa());
+                                System.out.println("Nivel hierro: " + p.getNivelHierroSangre());
+
+                                if (p.getMedicamentos().isEmpty()) {
+                                    System.out.println(" No tiene medicamentos asignados");
+                                } else {
+                                    System.out.println("MEDICAMENTOS ASIGNADOS:");
+                                    for (Medicamento m : p.getMedicamentos()) {
+                                        System.out.println("- " + m.getNombre() + " (ID: " + m.getId() + ")");
+                                    }
+                                }
+                                System.out.println("----------------------------------------");
+                            }
+                        }
+                        System.out.println("\nTotal pacientes: " + pacientesConMedicamentos.size());
+                        break;
 
                     case 0:
                         System.out.println("Saliendo del programa...");
