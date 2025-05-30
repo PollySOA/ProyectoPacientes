@@ -592,6 +592,8 @@ public class GestionPacientesGUI extends JFrame {
     }
 
     //
+
+    //
     //
     // quitar string builder y imprimir Pacientes+Medicamientos */
     private void cargarDatosPacientesMedicamentos() {
