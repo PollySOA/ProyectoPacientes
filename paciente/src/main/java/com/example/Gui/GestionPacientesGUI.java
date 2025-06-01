@@ -18,6 +18,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GestionPacientesGUI extends JFrame {
 
@@ -85,6 +87,8 @@ public class GestionPacientesGUI extends JFrame {
                     txtNombrePaciente.setText(modelPacientes.getValueAt(filaSeleccionada, 1).toString());
                     txtGlucosa.setText(modelPacientes.getValueAt(filaSeleccionada, 2).toString());
                     txtHierro.setText(modelPacientes.getValueAt(filaSeleccionada, 3).toString());
+                    // Al seleccionar paciente, cargar su ID en campo de asociación
+                    txtAsociarPaciente.setText(modelPacientes.getValueAt(filaSeleccionada, 0).toString());
                 }
             }
         });
@@ -275,6 +279,9 @@ public class GestionPacientesGUI extends JFrame {
                 if (filaSeleccionada >= 0) {
                     txtIdMedicamento.setText(modelMedicamentos.getValueAt(filaSeleccionada, 0).toString());
                     txtNombreMedicamento.setText(modelMedicamentos.getValueAt(filaSeleccionada, 1).toString());
+
+                    // Al seleccionar medicamento, cargar su ID en campo de asociación
+                    txtAsociarMedicamento.setText(modelMedicamentos.getValueAt(filaSeleccionada, 0).toString());
                 }
             }
         });
@@ -428,6 +435,16 @@ public class GestionPacientesGUI extends JFrame {
         modelPacientesMedicamentos.addColumn("Medicamentos");
 
         tablePacientesMedicamentos = new JTable(modelPacientesMedicamentos);
+        tablePacientesMedicamentos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int filaSeleccionada = tablePacientesMedicamentos.getSelectedRow();
+                if (filaSeleccionada >= 0) {
+                    // Cargar IDs en campos de asociación al seleccionar en esta tabla
+                    txtAsociarPaciente.setText(modelPacientesMedicamentos.getValueAt(filaSeleccionada, 0).toString());
+                }
+            }
+        });
         tablePacientesMedicamentos.setSelectionBackground(new Color(180, 210, 240));
 
         JScrollPane scrollPacientesMed = new JScrollPane(tablePacientesMedicamentos);
@@ -478,8 +495,9 @@ public class GestionPacientesGUI extends JFrame {
                                 JOptionPane.showMessageDialog(null, "Paciente o medicamento no encontrado", "Error",
                                         JOptionPane.ERROR_MESSAGE);
                             } else {
-                                medicamento.agregarPaciente(paciente);
-                                mDAO.updateMedicamento(session, medicamento);
+
+                                paciente.agregarMedicamento(medicamento);
+                                pDAO.updatePaciente(session, paciente);
                                 tx.commit();
                                 cargarDatosPacientesMedicamentos();
                                 txtAsociarPaciente.setText("");
@@ -521,9 +539,10 @@ public class GestionPacientesGUI extends JFrame {
                                 JOptionPane.showMessageDialog(null, "Paciente o medicamento no encontrado", "Error",
                                         JOptionPane.ERROR_MESSAGE);
                             } else {
-                                medicamento.quitarPaciente(paciente);
-                                mDAO.updateMedicamento(session, medicamento);
+                                paciente.quitarMedicamento(medicamento);
+                                pDAO.updatePaciente(session, paciente);
                                 tx.commit();
+
                                 cargarDatosPacientesMedicamentos();
                                 txtAsociarPaciente.setText("");
                                 txtAsociarMedicamento.setText("");
@@ -591,28 +610,39 @@ public class GestionPacientesGUI extends JFrame {
         }
     }
 
-    //
-
-    //
-    //
-    // quitar string builder y imprimir Pacientes+Medicamientos */
+    /// !!ARREGLAR ESTA DISTINTO DE LO QUE DIJO MOISES!!!!!!!!!!
     private void cargarDatosPacientesMedicamentos() {
         modelPacientesMedicamentos.setRowCount(0);
+        // Convertimos la lista de pacientes a un Set para evitar duplicados
+        Set<Paciente> pacientes = new HashSet<>(pDAO.selectAllPacientes(session));// Convierte la lista a un Set
+                                                                                  // (colección que evita
+                                                                                  // duplicados)Como cuando pides todos
+                                                                                  // los clientes de una tienda y los
+                                                                                  // apuntas en una lista nueva.
 
-        List<Paciente> pacientes = pDAO.selectAllPacientes(session);
-        for (Paciente p : pacientesConMedicamientos) {
-            // Imprimimos
+        for (Paciente p : pacientes) {
+            Set<Medicamento> medicamentos = p.getMedicamentos();
+            String medicamentosStr = ""; // inicializamos la cadena de medicamentos
 
-            for (Medicamento m : p.getMedicamentos()) {
-                (m.getNombre()).append(" (ID:").append(m.getId()).append("), ");
-
+            if (!medicamentos.isEmpty()) {
+                for (Medicamento m : medicamentos) {
+                    medicamentosStr += medicamentosStr.isEmpty() ? m.getNombre() : ", " + m.getNombre();
+                }
+            } else {
+                medicamentosStr = "Sin medicamentos";
             }
 
             modelPacientesMedicamentos.addRow(new Object[] {
                     p.getId(),
                     p.getNombre(),
-
+                    medicamentosStr
             });
+
+            // Mantenemos los prints
+            System.out.println("Paciente: " + p.getNombre());
+            for (Medicamento m : medicamentos) {
+                System.out.println("Nombre Medicamento: " + m.getNombre() + " | ID Medicamento: " + m.getId());
+            }
         }
     }
 
