@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `pacienteMedicamento` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `pacienteMedicamento`;
+CREATE DATABASE  IF NOT EXISTS `paciente` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `paciente`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: pacienteMedicamento
+-- Host: 127.0.0.1    Database: paciente
 -- ------------------------------------------------------
 -- Server version	8.0.42-0ubuntu0.24.04.1
 
@@ -28,7 +28,7 @@ CREATE TABLE `medicamento` (
   `id_medicamento` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_medicamento`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,6 +37,7 @@ CREATE TABLE `medicamento` (
 
 LOCK TABLES `medicamento` WRITE;
 /*!40000 ALTER TABLE `medicamento` DISABLE KEYS */;
+INSERT INTO `medicamento` VALUES (2,'Vitaminas'),(3,'Suplemento'),(4,'Insulina');
 /*!40000 ALTER TABLE `medicamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -53,7 +54,7 @@ CREATE TABLE `paciente` (
   `nivelHierroSangre` int NOT NULL,
   `nombre` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_paciente`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,6 +63,7 @@ CREATE TABLE `paciente` (
 
 LOCK TABLES `paciente` WRITE;
 /*!40000 ALTER TABLE `paciente` DISABLE KEYS */;
+INSERT INTO `paciente` VALUES (2,90,75,'Yan'),(3,120,99,'Joel'),(4,119,65,'Maria'),(5,112,98,'Jose'),(6,140,99,'Juan'),(13,75,80,'Felipe'),(21,112,98,'Ana'),(22,123,45,'Mary');
 /*!40000 ALTER TABLE `paciente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,6 +90,7 @@ CREATE TABLE `paciente_medicamento` (
 
 LOCK TABLES `paciente_medicamento` WRITE;
 /*!40000 ALTER TABLE `paciente_medicamento` DISABLE KEYS */;
+INSERT INTO `paciente_medicamento` VALUES (3,2),(13,2),(22,2),(4,3),(6,4);
 /*!40000 ALTER TABLE `paciente_medicamento` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -100,4 +103,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-26  9:51:19
+-- Dump completed on 2025-06-02 19:16:24
