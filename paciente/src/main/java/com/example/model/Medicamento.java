@@ -5,13 +5,11 @@ import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data // Lombok genera automáticamente los métodos básicos como getters, setters, equals y hashCode
-@Getter
-@Setter
+@NoArgsConstructor // Lombok crea un constructor vacío por defecto
 @Entity
 @Table(name = "medicamento")
 public class Medicamento {
@@ -27,11 +25,6 @@ public class Medicamento {
     // 'mappedBy' indica que la relación está gestionada por el atributo 'medicamentos' en la clase Paciente.
     @ManyToMany(mappedBy = "medicamentos", fetch = FetchType.EAGER)
     private Set<Paciente> pacientes = new HashSet<>();
-
-  public Medicamento() {
-        super();
-    }
-
 
     // Constructor que permite crear un medicamento indicando solo el nombre
     public Medicamento(String nombre) {

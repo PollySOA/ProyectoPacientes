@@ -5,17 +5,15 @@ import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @Data // Lombok genera automáticamente los métodos básicos como getters, setters, equals y hashCode
+@NoArgsConstructor // Lombok crea un constructor vacío por defecto
+@EqualsAndHashCode(exclude = "medicamentos") // Evita recursión infinita en equals/hashCode por la relación bidireccional
 @Entity
-@Getter
-@Setter
 @Table(name = "paciente")
 public class Paciente {
-
-  
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +34,6 @@ public class Paciente {
     )
     private Set<Medicamento> medicamentos = new HashSet<>();
 
-  public Paciente() {
-        super();
-    }
-
-    
     // Constructor para crear un paciente con nombre y niveles iniciales
     public Paciente(String nombre, int nivelGlucosa, int nivelHierroSangre) {
         this.nombre = nombre;

@@ -255,7 +255,7 @@ public class Main {
                         break;
 
                     case 10:
-                        // Mostrar pacientes con sus medicamentos
+                        // quitar pacientes con sus medicamentos
                         System.out.println("\n--- PACIENTES Y SUS MEDICAMENTOS ---");
                         List<Paciente> pacientesConMed = pDAO.selectAllPacientes(session);
                         for (Paciente p : pacientesConMed) {
@@ -294,7 +294,7 @@ public class Main {
                         }
                         break;
                     case 11:
-                        // Mostrar pacientes con sus medicamentos (versión mejorada)
+                        // Mostrar pacientes con sus medicamentos 
                         System.out.println("\n══════════════════════════════════════");
                         System.out.println("    LISTADO DE PACIENTES CON MEDICAMENTOS");
                         System.out.println("══════════════════════════════════════\n");
