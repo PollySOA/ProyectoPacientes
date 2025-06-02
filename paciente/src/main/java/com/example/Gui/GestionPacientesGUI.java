@@ -147,25 +147,25 @@ public class GestionPacientesGUI extends JFrame {
         // Botones para pacientes
         JButton btnGuardarPaciente = new JButton("Guardar");
         btnGuardarPaciente.setBounds(320, 70, 100, 25);
-         btnGuardarPaciente.addActionListener(new ActionListener() {
+        btnGuardarPaciente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nombre = txtNombrePaciente.getText().trim();
                 String glucosa = txtGlucosa.getText().trim();
                 String hierro = txtHierro.getText().trim();
 
                 if (nombre.isEmpty() || glucosa.isEmpty() || hierro.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No puede haber campos vacíos", "Error", JOptionPane.ERROR_MESSAGE);
-                } 
-                else if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")) {
-                    JOptionPane.showMessageDialog(null, "El nombre solo puede contener letras y espacios", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else if (!glucosa.matches("^\\d+$")) {
-                    JOptionPane.showMessageDialog(null, "El nivel de glucosa debe ser un número entero", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else if (!hierro.matches("^\\d+$")) {
-                    JOptionPane.showMessageDialog(null, "El nivel de hierro debe ser un número entero", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else {
+                    JOptionPane.showMessageDialog(null, "No puede haber campos vacíos", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")) {
+                    JOptionPane.showMessageDialog(null, "El nombre solo puede contener letras y espacios", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (!glucosa.matches("^\\d+$")) {
+                    JOptionPane.showMessageDialog(null, "El nivel de glucosa debe ser un número entero", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (!hierro.matches("^\\d+$")) {
+                    JOptionPane.showMessageDialog(null, "El nivel de hierro debe ser un número entero", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
                     try {
                         Paciente nuevoPaciente = new Paciente(
                                 nombre,
@@ -196,7 +196,7 @@ public class GestionPacientesGUI extends JFrame {
 
         JButton btnActualizarPaciente = new JButton("Actualizar");
         btnActualizarPaciente.setBounds(430, 30, 100, 25);
-       btnActualizarPaciente.addActionListener(new ActionListener() {
+        btnActualizarPaciente.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nombre = txtNombrePaciente.getText().trim();
                 String glucosa = txtGlucosa.getText().trim();
@@ -204,20 +204,19 @@ public class GestionPacientesGUI extends JFrame {
 
                 if (txtIdPaciente.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Seleccione un paciente", "Error", JOptionPane.ERROR_MESSAGE);
-                } 
-                else if (nombre.isEmpty() || glucosa.isEmpty() || hierro.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "No puede haber campos vacíos", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")) {
-                    JOptionPane.showMessageDialog(null, "El nombre solo puede contener letras y espacios", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else if (!glucosa.matches("^\\d+$")) {
-                    JOptionPane.showMessageDialog(null, "El nivel de glucosa debe ser un número entero", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else if (!hierro.matches("^\\d+$")) {
-                    JOptionPane.showMessageDialog(null, "El nivel de hierro debe ser un número entero", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else {
+                } else if (nombre.isEmpty() || glucosa.isEmpty() || hierro.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "No puede haber campos vacíos", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")) {
+                    JOptionPane.showMessageDialog(null, "El nombre solo puede contener letras y espacios", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (!glucosa.matches("^\\d+$")) {
+                    JOptionPane.showMessageDialog(null, "El nivel de glucosa debe ser un número entero", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else if (!hierro.matches("^\\d+$")) {
+                    JOptionPane.showMessageDialog(null, "El nivel de hierro debe ser un número entero", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
                     Paciente paciente = pDAO.selectPacienteById(session, Integer.parseInt(txtIdPaciente.getText()));
                     if (paciente == null) {
                         JOptionPane.showMessageDialog(null, "Paciente no encontrado", "Error",
@@ -258,29 +257,45 @@ public class GestionPacientesGUI extends JFrame {
                 if (txtIdPaciente.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Seleccione un paciente", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    Transaction tx = session.beginTransaction();
-                    try {
-                        Paciente paciente = pDAO.selectPacienteById(session, Integer.parseInt(txtIdPaciente.getText()));
-                        if (paciente == null) {
-                            JOptionPane.showMessageDialog(null, "Paciente no encontrado", "Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            // Eliminar referencias primero
-                            for (Medicamento m : paciente.getMedicamentos()) {
-                                paciente.quitarMedicamento(m);
-                            }
+                    int confirm = JOptionPane.showConfirmDialog(null,
+                            "¿Está seguro que desea eliminar este paciente y todas sus asociaciones?",
+                            "Confirmar eliminación",
+                            JOptionPane.YES_NO_OPTION);
 
-                            pDAO.deletePaciente(session, paciente.getId());
-                            tx.commit();
-                            cargarDatosPacientes();
-                            cargarDatosPacientesMedicamentos();
-                            limpiarCamposPaciente();
-                            JOptionPane.showMessageDialog(null, "Paciente eliminado");
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        Transaction tx = session.beginTransaction();
+                        try {
+                            Paciente paciente = pDAO.selectPacienteById(session,
+                                    Integer.parseInt(txtIdPaciente.getText()));
+                            if (paciente == null) {
+                                JOptionPane.showMessageDialog(null, "Paciente no encontrado", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                // Eliminar asociaciones de medicamentos
+                                //
+                                for (Medicamento m : paciente.getMedicamentos()) {
+                                    // Eliminar este paciente de cada medicamento asociado
+                                    m.getPacientes().remove(paciente);
+                                    // Actualizar el medicamento en la base de datos
+                                    mDAO.updateMedicamento(session, m);
+                                }
+
+                                // Ahora eliminar el paciente
+                                pDAO.deletePaciente(session, paciente.getId());
+                                tx.commit();
+
+                                cargarDatosPacientes();
+                                cargarDatosMedicamentos();
+                                cargarDatosPacientesMedicamentos();
+                                limpiarCamposPaciente();
+                                JOptionPane.showMessageDialog(null,
+                                        "Paciente y sus asociaciones eliminados correctamente");
+                            }
+                        } catch (Exception ex) {
+                            tx.rollback();
+                            JOptionPane.showMessageDialog(null, "Error al eliminar: " + ex.getMessage(), "Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
-                    } catch (Exception ex) {
-                        tx.rollback();
-                        JOptionPane.showMessageDialog(null, "Error al eliminar: " + ex.getMessage(), "Error",
-                                JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -358,9 +373,12 @@ public class GestionPacientesGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String nombre = txtNombreMedicamento.getText().trim();
                 if (nombre.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "El nombre del medicamento no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "El nombre del medicamento no puede estar vacío", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 } else if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")) {
-                    JOptionPane.showMessageDialog(null, "El nombre del medicamento solo puede contener letras y espacios", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "El nombre del medicamento solo puede contener letras y espacios", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 } else {
                     Medicamento nuevoMedicamento = new Medicamento(nombre);
 
@@ -384,7 +402,7 @@ public class GestionPacientesGUI extends JFrame {
 
         JButton btnActualizarMedicamento = new JButton("Actualizar");
         btnActualizarMedicamento.setBounds(430, 30, 100, 25);
-         btnActualizarMedicamento.addActionListener(new ActionListener() {
+        btnActualizarMedicamento.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (txtIdMedicamento.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Seleccione un medicamento", "Error",
@@ -392,9 +410,12 @@ public class GestionPacientesGUI extends JFrame {
                 } else {
                     String nombre = txtNombreMedicamento.getText().trim();
                     if (nombre.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "El nombre del medicamento no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "El nombre del medicamento no puede estar vacío", "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     } else if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")) {
-                        JOptionPane.showMessageDialog(null, "El nombre del medicamento solo puede contener letras y espacios", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,
+                                "El nombre del medicamento solo puede contener letras y espacios", "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     } else {
                         Medicamento medicamento = mDAO.selectMedicamentoById(session,
                                 Integer.parseInt(txtIdMedicamento.getText()));
@@ -432,12 +453,12 @@ public class GestionPacientesGUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Seleccione un medicamento", "Error",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
-                    String nombre = txtNombreMedicamento.getText().trim();
-                    if (nombre.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Debe ingresar el nombre del medicamento a eliminar", "Error", JOptionPane.ERROR_MESSAGE);
-                    } else if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$")) {
-                        JOptionPane.showMessageDialog(null, "El nombre del medicamento solo puede contener letras y espacios", "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
+                    int confirm = JOptionPane.showConfirmDialog(null,
+                            "¿Está seguro que desea eliminar este medicamento y todas sus asociaciones?",
+                            "Confirmar eliminación",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
                         Transaction tx = session.beginTransaction();
                         try {
                             Medicamento medicamento = mDAO.selectMedicamentoById(session,
@@ -446,17 +467,22 @@ public class GestionPacientesGUI extends JFrame {
                                 JOptionPane.showMessageDialog(null, "Medicamento no encontrado", "Error",
                                         JOptionPane.ERROR_MESSAGE);
                             } else {
-                                // Cambio solicitado: Eliminado new ArrayList<>()
+                                // Primero quito este medicamento de todos los pacientes que lo usan
                                 for (Paciente p : medicamento.getPacientes()) {
-                                    medicamento.quitarPaciente(p);
+                                    p.getMedicamentos().remove(medicamento);
+                                    pDAO.updatePaciente(session, p);
                                 }
 
+                                // Ahora sí elimino el medicamento
                                 mDAO.deleteMedicamento(session, medicamento.getId());
                                 tx.commit();
-                                cargarDatosMedicamentos();
+
+                                // Actualizo todas las tablascargarDatosMedicamentos();
+                                cargarDatosPacientes();
                                 cargarDatosPacientesMedicamentos();
                                 limpiarCamposMedicamento();
-                                JOptionPane.showMessageDialog(null, "Medicamento eliminado");
+                                JOptionPane.showMessageDialog(null,
+                                        "Medicamento y sus asociaciones eliminados correctamente");
                             }
                         } catch (Exception ex) {
                             tx.rollback();
@@ -575,7 +601,7 @@ public class GestionPacientesGUI extends JFrame {
         // Botón para desasociar
         JButton btnDesasociar = new JButton("Desasociar");
         btnDesasociar.setBounds(600, 30, 100, 25);
-       btnDesasociar.addActionListener(new ActionListener() {
+        btnDesasociar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (txtAsociarPaciente.getText().isEmpty() || txtAsociarMedicamento.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Ingrese ambos IDs", "Error", JOptionPane.ERROR_MESSAGE);
@@ -665,13 +691,13 @@ public class GestionPacientesGUI extends JFrame {
     }
 
     private void cargarDatosPacientesMedicamentos() {
-        // Limpiar tabla
+        // Limpio tabla
         modelPacientesMedicamentos.setRowCount(0);
 
-        // Obtener todos los pacientes
+        // Obtengo todos los pacientes
         List<Paciente> pacientes = pDAO.selectAllPacientes(session);
 
-        // Recorrer pacientes
+        // Recojo lista de pacientes y
         for (Paciente p : pacientes) { // Para cada paciente
 
             for (Medicamento m : p.getMedicamentos()) {// Recorremos medicamentos de cada paciente
