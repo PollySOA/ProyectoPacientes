@@ -16,15 +16,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 // imports de las clases helper
 // En tu clase GestionPacientesGUI, agrega estos imports adicionales
-import com.example.Gui.helper_classes.CustomFontLoader;
-import com.example.Gui.helper_classes.OnClickEventHelper;
-import com.example.Gui.helper_classes.OnFocusEventHelper;
-import com.example.Gui.helper_classes.RoundedBorder;
+import com.example.Gui.helper_classes.*;
 
 public class GestionPacientesGUI extends JFrame {
 
@@ -64,7 +59,7 @@ public class GestionPacientesGUI extends JFrame {
             customFont = new Font("Arial", Font.PLAIN, 12);
         }
 
-        // Panel principal con fondo más profesional
+        // Panel principal con fondo
         JPanel mainPanel = new JPanel(null);
         mainPanel.setBackground(new Color(240, 245, 250));
 
@@ -624,37 +619,40 @@ public class GestionPacientesGUI extends JFrame {
         }
     }
 
-    /// !!ARREGLAR ESTA DISTINTO DE LO QUE DIJO MOISES!!!!!!!!!!
     private void cargarDatosPacientesMedicamentos() {
+        // Limpiar tabla
         modelPacientesMedicamentos.setRowCount(0);
-        Set<Paciente> pacientes = new HashSet<>(pDAO.selectAllPacientes(session)); // convierto la lista(dao) a un Set
 
-        for (Paciente p : pacientes) {
-            Set<Medicamento> medicamentos = p.getMedicamentos();
-            String medicamentosStr = "";
+        // Obtener todos los pacientes
+        List<Paciente> pacientes = pDAO.selectAllPacientes(session);
 
-            if (!medicamentos.isEmpty()) {
-                for (Medicamento m : medicamentos) {
-                    // Versión con if simple
-                    if (medicamentosStr.isEmpty()) {
-                        medicamentosStr = m.getNombre(); // Primer elemento
-                    } else {
-                        medicamentosStr = medicamentosStr + ", " + m.getNombre(); // Elementos siguientes
-                    }
-                }
-            } else {
-                medicamentosStr = "Sin medicamentos";
+        // Recorrer pacientes
+        for (Paciente p : pacientes) { // Para cada paciente
+
+            for (Medicamento m : p.getMedicamentos()) {// Recorremos medicamentos de cada paciente
+                // Crea UNA fila por CADA relación paciente-medicamento
+                Object[] row = new Object[3];
+                row[0] = p.getId();
+                row[1] = p.getNombre();
+                row[2] = m.getNombre(); // Mostramos nombre en lugar de ID
+
+                modelPacientesMedicamentos.addRow(row);
             }
 
-            modelPacientesMedicamentos.addRow(new Object[] {
-                    p.getId(),
-                    p.getNombre(),
-                    medicamentosStr
-            });
+            // Si no hay medicamentos asociados : mostrar pacientes sin medicamentos
+            if (p.getMedicamentos().isEmpty()) {
+                Object[] row = new Object[3];
+                row[0] = p.getId();
+                row[1] = p.getNombre();
+                row[2] = "Sin medicamentos";
+                modelPacientesMedicamentos.addRow(row);
+            }
 
-            System.out.println("Paciente: " + p.getNombre());
-            for (Medicamento m : medicamentos) {
-                System.out.println("Medicamento: " + m.getNombre() + " | ID: " + m.getId());
+            // Imprmir por consola
+            System.out.println("Paciente: " + p.getNombre() + " (ID: " + p.getId() + ")");// Para cada paciente
+            // Imprimir medicamentos asociados
+            for (Medicamento m : p.getMedicamentos()) {
+                System.out.println("  - Medicamento: " + m.getNombre() + " (ID: " + m.getId() + ")");
             }
         }
     }
