@@ -10,8 +10,8 @@ import org.hibernate.Transaction;
 
 import com.example.dao.MedicamentoDAO;
 import com.example.dao.PacienteDAO;
-import com.example.example.model.Medicamento;
-import com.example.example.model.Paciente;
+import com.example.model.Medicamento;
+import com.example.model.Paciente;
 import com.example.util.HibernateUtil;
 
 public class Main {

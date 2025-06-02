@@ -8,8 +8,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import com.example.example.model.Medicamento;
-import com.example.example.model.Paciente;
+import com.example.model.Medicamento;
+import com.example.model.Paciente;
 
 public class HibernateUtil {
 

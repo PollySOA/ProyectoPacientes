@@ -2,7 +2,8 @@ package com.example.dao;
 
 import java.util.List;
 import org.hibernate.Session;
-import com.example.example.model.Medicamento;
+
+import com.example.model.Medicamento;
 
 // Esta clase sirve para manejar todas las operaciones relacionadas con los medicamentos en la base de datos.
 // Aquí puedes insertar, actualizar, borrar y consultar medicamentos usando Hibernate.

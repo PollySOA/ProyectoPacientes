@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import com.example.example.model.Paciente;
+import com.example.model.Paciente;
 
 public class PacienteDAO {
 
