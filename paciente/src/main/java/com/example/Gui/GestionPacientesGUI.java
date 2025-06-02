@@ -148,6 +148,7 @@ public class GestionPacientesGUI extends JFrame {
         JButton btnGuardarPaciente = new JButton("Guardar");
         btnGuardarPaciente.setBounds(320, 70, 100, 25);
         btnGuardarPaciente.addActionListener(new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 if (txtNombrePaciente.getText().isEmpty() || txtGlucosa.getText().isEmpty()
                         || txtHierro.getText().isEmpty()) {
