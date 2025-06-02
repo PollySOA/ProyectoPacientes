@@ -19,7 +19,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
+// imports de las clases helper
+// En tu clase GestionPacientesGUI, agrega estos imports adicionales
+import com.example.Gui.helper_classes.CustomFontLoader;
+import com.example.Gui.helper_classes.OnClickEventHelper;
+import com.example.Gui.helper_classes.OnFocusEventHelper;
+import com.example.Gui.helper_classes.RoundedBorder;
 
 public class GestionPacientesGUI extends JFrame {
 
@@ -53,14 +58,21 @@ public class GestionPacientesGUI extends JFrame {
         pDAO = new PacienteDAO();
         mDAO = new MedicamentoDAO();
 
-        // Panel principal (único panel como solicitaste)
+        // Cargar fuente personalizada (si existe)
+        Font customFont = CustomFontLoader.loadFont("fuentes/roboto.ttf", 12f);
+        if (customFont == null) {
+            customFont = new Font("Arial", Font.PLAIN, 12);
+        }
+
+        // Panel principal con fondo más profesional
         JPanel mainPanel = new JPanel(null);
-        mainPanel.setBackground(Color.WHITE);
+        mainPanel.setBackground(new Color(240, 245, 250));
 
         // ============ SECCIÓN PACIENTES ============
         JLabel lblTituloPacientes = new JLabel("PACIENTES");
         lblTituloPacientes.setBounds(20, 20, 200, 25);
-        lblTituloPacientes.setFont(new Font("Arial", Font.BOLD, 16));
+        lblTituloPacientes.setFont(CustomFontLoader.loadFont("fonts/roboto-bold.ttf", 16f)); // Fuente personalizada
+        lblTituloPacientes.setForeground(new Color(0, 102, 204)); // Color azul
         mainPanel.add(lblTituloPacientes);
 
         // Tabla de pacientes (muestra todos los pacientes)
@@ -256,7 +268,8 @@ public class GestionPacientesGUI extends JFrame {
         // ============ SECCIÓN MEDICAMENTOS ============
         JLabel lblTituloMedicamentos = new JLabel("MEDICAMENTOS");
         lblTituloMedicamentos.setBounds(600, 20, 200, 25);
-        lblTituloMedicamentos.setFont(new Font("Arial", Font.BOLD, 16));
+        lblTituloMedicamentos.setFont(CustomFontLoader.loadFont("fonts/roboto-bold.ttf", 16f)); // Fuente personalizada
+        lblTituloMedicamentos.setForeground(new Color(0, 102, 204)); // Color azul
         mainPanel.add(lblTituloMedicamentos);
 
         // Tabla de medicamentos
@@ -420,7 +433,8 @@ public class GestionPacientesGUI extends JFrame {
         // ============ SECCIÓN ASOCIACIONES ============
         JLabel lblTituloAsociaciones = new JLabel("ASOCIACIONES PACIENTES-MEDICAMENTOS");
         lblTituloAsociaciones.setBounds(20, 400, 400, 25);
-        lblTituloAsociaciones.setFont(new Font("Arial", Font.BOLD, 16));
+        lblTituloAsociaciones.setFont(CustomFontLoader.loadFont("fonts/roboto-bold.ttf", 16f)); // Fuente personalizada
+        lblTituloAsociaciones.setForeground(new Color(0, 102, 204)); // Color azul
         mainPanel.add(lblTituloAsociaciones);
 
         // Tabla de pacientes con medicamentos
@@ -613,20 +627,20 @@ public class GestionPacientesGUI extends JFrame {
     /// !!ARREGLAR ESTA DISTINTO DE LO QUE DIJO MOISES!!!!!!!!!!
     private void cargarDatosPacientesMedicamentos() {
         modelPacientesMedicamentos.setRowCount(0);
-        // Convertimos la lista de pacientes a un Set para evitar duplicados
-        Set<Paciente> pacientes = new HashSet<>(pDAO.selectAllPacientes(session));// Convierte la lista a un Set
-                                                                                  // (colección que evita
-                                                                                  // duplicados)Como cuando pides todos
-                                                                                  // los clientes de una tienda y los
-                                                                                  // apuntas en una lista nueva.
+        Set<Paciente> pacientes = new HashSet<>(pDAO.selectAllPacientes(session)); // convierto la lista(dao) a un Set
 
         for (Paciente p : pacientes) {
             Set<Medicamento> medicamentos = p.getMedicamentos();
-            String medicamentosStr = ""; // inicializamos la cadena de medicamentos
+            String medicamentosStr = "";
 
             if (!medicamentos.isEmpty()) {
                 for (Medicamento m : medicamentos) {
-                    medicamentosStr += medicamentosStr.isEmpty() ? m.getNombre() : ", " + m.getNombre();
+                    // Versión con if simple
+                    if (medicamentosStr.isEmpty()) {
+                        medicamentosStr = m.getNombre(); // Primer elemento
+                    } else {
+                        medicamentosStr = medicamentosStr + ", " + m.getNombre(); // Elementos siguientes
+                    }
                 }
             } else {
                 medicamentosStr = "Sin medicamentos";
@@ -638,10 +652,9 @@ public class GestionPacientesGUI extends JFrame {
                     medicamentosStr
             });
 
-            // Mantenemos los prints
             System.out.println("Paciente: " + p.getNombre());
             for (Medicamento m : medicamentos) {
-                System.out.println("Nombre Medicamento: " + m.getNombre() + " | ID Medicamento: " + m.getId());
+                System.out.println("Medicamento: " + m.getNombre() + " | ID: " + m.getId());
             }
         }
     }
